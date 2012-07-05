@@ -51,6 +51,7 @@ public class NewServerWizardPage extends WizardPage {
 		hostLabel.setText(Messages.NewServerWizardPage_host_label);
 		hostCombo = new Combo(container, SWT.BORDER);
 		hostCombo.add("localhost");
+		hostCombo.add("127.0.0.1");		
 		hostCombo.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				validate();

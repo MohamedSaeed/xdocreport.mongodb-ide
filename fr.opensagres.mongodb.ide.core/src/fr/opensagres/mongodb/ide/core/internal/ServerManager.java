@@ -17,32 +17,30 @@ public class ServerManager extends ArrayList<Server> implements IServerManager {
 
 	public ServerManager() {
 		this.listeners = new ListenerList();
-//		Server s = new Server("MyTest", "localhost", 27017);
-//		addServer(s);
-//		s = new Server("MyTest", "localhost", 27018);
-//		addServer(s);
-		// addServer(new Server());
 	}
 
 	public void addServer(Server server) {
 		super.add(server);
-		Object[] changeListeners = this.listeners.getListeners();
-		if (changeListeners.length == 0)
-			return;
-		for (int i = 0; i < changeListeners.length; ++i) {
-			final IServerListener l = (IServerListener) changeListeners[i];
-			l.serverAdded(server);
-		}
+		processListeners(server, true);
 	}
 
 	public void removeServer(Server server) {
 		super.remove(server);
+		processListeners(server, false);
+		server.dispose();
+	}
+
+	private void processListeners(Server server, boolean start) {
 		Object[] changeListeners = this.listeners.getListeners();
 		if (changeListeners.length == 0)
 			return;
 		for (int i = 0; i < changeListeners.length; ++i) {
 			final IServerListener l = (IServerListener) changeListeners[i];
-			l.serverRemoved(server);
+			if (start) {
+				l.serverAdded(server);
+			} else {
+				l.serverRemoved(server);
+			}
 		}
 	}
 
@@ -56,6 +54,17 @@ public class ServerManager extends ArrayList<Server> implements IServerManager {
 
 	public void removeListener(IServerListener listener) {
 		listeners.remove(listener);
+	}
+
+	public void dispose() {
+		for (Server server : this) {
+			try {
+				server.dispose();
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 }

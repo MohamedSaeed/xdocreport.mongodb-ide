@@ -1,4 +1,4 @@
-package fr.opensagres.mongodb.ide.launching.internal;
+package fr.opensagres.mongodb.ide.launching.internal.launchConfigurations.mongod;
 
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
@@ -6,7 +6,10 @@ import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
-public class ServerLaunchConfigurationTab extends
+import fr.opensagres.mongodb.ide.launching.internal.ImageResources;
+import fr.opensagres.mongodb.ide.launching.internal.Messages;
+
+public class MongodLaunchConfigurationTab extends
 		AbstractLaunchConfigurationTab {
 
 	public void createControl(Composite parent) {

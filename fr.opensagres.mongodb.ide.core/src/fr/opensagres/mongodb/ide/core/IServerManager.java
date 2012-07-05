@@ -16,4 +16,6 @@ public interface IServerManager {
 
 	void removeListener(IServerListener listener);
 
+	void dispose();
+
 }

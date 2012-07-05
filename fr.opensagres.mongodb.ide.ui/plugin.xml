@@ -74,5 +74,12 @@
             name="%NewServerWizard.name">
       </wizard>
    </extension>
+  <extension point="org.eclipse.ui.preferencePages">
+    <page
+      id="fr.opensagres.mongodb.ide.ui.preferencePage"
+      name="%preferenceMongoTitle"
+      class="fr.opensagres.mongodb.ide.ui.internal.preferences.MongoPreferencePage">      
+    </page>    
+  </extension>
      
 </plugin>
