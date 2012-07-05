@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -41,9 +42,11 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import fr.opensagres.mongodb.ide.core.Platform;
 import fr.opensagres.mongodb.ide.core.model.MongoRuntime;
 import fr.opensagres.mongodb.ide.launching.internal.Activator;
 import fr.opensagres.mongodb.ide.launching.internal.Messages;
+import fr.opensagres.mongodb.ide.launching.internal.dialogs.AddRuntimeDialog;
 
 public class InstalledRuntimesBlock extends AbstractTableBlock implements
 		ISelectionProvider {
@@ -239,7 +242,7 @@ public class InstalledRuntimesBlock extends AbstractTableBlock implements
 	}
 
 	protected void fillWithWorkspaceRuntimes() {
-		//setRuntimes(XPathRuntimeManager.getDefault().getRuntimes());
+		setRuntimes(Platform.getMongoRuntimeManager().getRuntimes());
 	}
 
 	private void fireSelectionChanged() {
@@ -255,25 +258,25 @@ public class InstalledRuntimesBlock extends AbstractTableBlock implements
 	/**
 	 * Sorts by type, and name within type.
 	 */
-//	private void sortByType() {
-//		tableViewer.setSorter(new ViewerSorter() {
-//			@Override
-//			public int compare(Viewer viewer, Object e1, Object e2) {
-//				MongoRuntime left = (MongoRuntime) e1;
-//				MongoRuntime right = (MongoRuntime) e2;
-//				return left
-//						.getRuntimeType()
-//						.getLabel()
-//						.compareToIgnoreCase(
-//								right.getRuntimeType().getLabel());
-//			}
-//
-//			@Override
-//			public boolean isSorterProperty(Object element, String property) {
-//				return true;
-//			}
-//		});
-//	}
+	// private void sortByType() {
+	// tableViewer.setSorter(new ViewerSorter() {
+	// @Override
+	// public int compare(Viewer viewer, Object e1, Object e2) {
+	// MongoRuntime left = (MongoRuntime) e1;
+	// MongoRuntime right = (MongoRuntime) e2;
+	// return left
+	// .getRuntimeType()
+	// .getLabel()
+	// .compareToIgnoreCase(
+	// right.getRuntimeType().getLabel());
+	// }
+	//
+	// @Override
+	// public boolean isSorterProperty(Object element, String property) {
+	// return true;
+	// }
+	// });
+	// }
 
 	private void sortBySource() {
 		tableViewer.setSorter(new ViewerSorter() {
@@ -281,8 +284,7 @@ public class InstalledRuntimesBlock extends AbstractTableBlock implements
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				MongoRuntime left = (MongoRuntime) e1;
 				MongoRuntime right = (MongoRuntime) e2;
-				return left.getSource().compareToIgnoreCase(
-						right.getSource());
+				return left.getSource().compareToIgnoreCase(right.getSource());
 			}
 
 			@Override
@@ -324,12 +326,11 @@ public class InstalledRuntimesBlock extends AbstractTableBlock implements
 				&& selectionCount < tableViewer.getTable().getItemCount()) {
 			Iterator<?> iterator = selection.iterator();
 			while (iterator.hasNext()) {
-				MongoRuntime install = (MongoRuntime) iterator
-						.next();
-				//if (install.isContributed()) {
-					fRemoveButton.setEnabled(false);
-					return;
-				//}
+				MongoRuntime install = (MongoRuntime) iterator.next();
+				// if (install.isContributed()) {
+				fRemoveButton.setEnabled(false);
+				return;
+				// }
 			}
 			fRemoveButton.setEnabled(true);
 		} else {
@@ -348,7 +349,7 @@ public class InstalledRuntimesBlock extends AbstractTableBlock implements
 		return fControl;
 	}
 
-	protected void setRuntimes(MongoRuntime[] vms) {
+	protected void setRuntimes(List<MongoRuntime> vms) {
 		runtimes.clear();
 		for (MongoRuntime element : vms) {
 			runtimes.add(element);
@@ -362,13 +363,11 @@ public class InstalledRuntimesBlock extends AbstractTableBlock implements
 	}
 
 	private void addRuntime() {
-		// AddRuntimeDialog dialog = new AddRuntimeDialog(this, getShell(),
-		// JAXPRuntime.getRuntimeTypesExclJREDefault(), null);
+		AddRuntimeDialog dialog = new AddRuntimeDialog(fAddButton.getShell());
 		// dialog.setTitle(Messages.AddRuntimeDialog_Add_Title);
-		// if (dialog.open() != Window.OK)
-		// {
-		// return;
-		// }
+		if (dialog.open() != Window.OK) {
+			// return;
+		}
 	}
 
 	public void runtimeAdded(MongoRuntime install) {
@@ -390,8 +389,7 @@ public class InstalledRuntimesBlock extends AbstractTableBlock implements
 	private void editRuntime() {
 		IStructuredSelection selection = (IStructuredSelection) tableViewer
 				.getSelection();
-		MongoRuntime install = (MongoRuntime) selection
-				.getFirstElement();
+		MongoRuntime install = (MongoRuntime) selection.getFirstElement();
 		if (install == null) {
 			return;
 		}
@@ -485,8 +483,7 @@ public class InstalledRuntimesBlock extends AbstractTableBlock implements
 		return Activator.getDefault().getDialogSettings();
 	}
 
-	private class RuntimesContentProvider implements
-			IStructuredContentProvider {
+	private class RuntimesContentProvider implements IStructuredContentProvider {
 		public Object[] getElements(Object input) {
 			return runtimes.toArray();
 		}
@@ -506,8 +503,8 @@ public class InstalledRuntimesBlock extends AbstractTableBlock implements
 				switch (columnIndex) {
 				case 0:
 					return install.getName();
-				 case 1:
-					 return install.getSource();
+				case 1:
+					return install.getSource();
 					// case 2:
 					// if (install.getDebugger() != null)
 					// {

@@ -6,6 +6,8 @@ public class Messages extends NLS {
 
 	private static final String BUNDLE_NAME = "fr.opensagres.mongodb.ide.launching.internal.Messages";//$NON-NLS-1$
 
+	public static String Button_browse;
+	
 	// ****************** ServerLaunchConfigurationTab ******************
 
 	public static String ServerLaunchConfigurationTab_name;
@@ -23,6 +25,13 @@ public class Messages extends NLS {
 	public static String InstalledRuntimesBlock_1;
 
 	public static String InstalledRuntimesBlock_0;
+
+	// ****************** AddRuntimeDialog ******************
+	public static String AddRuntimeDialog_title;
+	public static String AddRuntimeDialog_desc;
+	public static String AddRuntimeDialog_runtimeName;
+	public static String AddRuntimeDialog_installDir;
+	public static String AddRuntimeDialog_selectInstallDir;
 
 	static {
 		// load message values from bundle file
